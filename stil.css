@@ -1,0 +1,55 @@
+/* CookiWorld – öffentliche Seiten. Farben wie im Spiel (Himmel, Tinte, Rosa, Sonne, Lavendel), Systemschrift,
+   keine externen Dateien. */
+:root {
+  --himmel: #9ad8ff;
+  --himmel-hell: #ffe8f3;
+  --tinte: #3b2f5c;
+  --leise: #6b5f8f;
+  --rosa: #ff6f9c;
+  --rosa-dunkel: #c2457a;
+  --sonne: #ffd86b;
+  --lavendel: #f3efff;
+  --karte: #ffffff;
+  --schrift: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--himmel-hell); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  /* über die ganze Seitenhöhe (kein „fixed“: iOS Safari kennt es nicht, darunter wäre es weiß) */
+  background: linear-gradient(180deg, var(--himmel) 0, var(--himmel-hell) 900px) no-repeat, var(--himmel-hell);
+  color: var(--tinte);
+  font: 400 18px/1.6 var(--schrift);
+}
+main { max-width: 720px; margin: 0 auto; padding: 24px 16px 8px; }
+.kopf { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; margin-bottom: 18px; }
+.kopf img { width: 64px; height: 64px; border-radius: 15px; box-shadow: 0 3px 0 rgba(59, 47, 92, 0.18); }
+.kopf b { display: block; font-size: 30px; font-weight: 800; letter-spacing: 0.01em; }
+.kopf small { display: block; font-size: 15px; color: var(--leise); }
+.karte { background: var(--karte); border-radius: 24px; padding: 20px 22px; box-shadow: 0 5px 0 rgba(59, 47, 92, 0.12); margin-bottom: 18px; }
+h1 { font-size: 28px; line-height: 1.2; margin: 0 0 12px; }
+h2 { font-size: 21px; line-height: 1.25; margin: 22px 0 6px; }
+h2:first-child { margin-top: 0; }
+p, ul { margin: 0 0 12px; }
+ul { padding-left: 1.2em; }
+li { margin-bottom: 4px; }
+a { color: var(--rosa-dunkel); text-underline-offset: 3px; }
+a:focus-visible { outline: 3px solid var(--sonne); outline-offset: 2px; border-radius: 4px; }
+.knoepfe { display: grid; gap: 12px; margin: 16px 0 4px; }
+.knopf { display: block; text-decoration: none; background: var(--lavendel); color: var(--tinte); border-radius: 18px; padding: 14px 18px; font-weight: 700; font-size: 19px; box-shadow: 0 4px 0 #d8d0f5; }
+.knopf small { display: block; font-weight: 400; font-size: 15px; color: var(--leise); }
+.knopf.haupt { background: var(--rosa); color: #fff; box-shadow: 0 4px 0 var(--rosa-dunkel); }
+.knopf.haupt small { color: #ffe3ee; }
+.held { display: flex; gap: 18px; align-items: center; }
+.held img { width: 112px; height: 112px; border-radius: 26px; flex: none; box-shadow: 0 4px 0 rgba(59, 47, 92, 0.18); }
+address { font-style: normal; }
+.leise { color: var(--leise); font-size: 16px; }
+footer { max-width: 720px; margin: 0 auto; padding: 8px 16px 32px; text-align: center; font-size: 16px; color: var(--leise); }
+footer a { margin: 0 8px; }
+@media (max-width: 480px) {
+  body { font-size: 17px; }
+  .held { flex-direction: column; text-align: center; }
+  .kopf b { font-size: 26px; }
+  .karte { padding: 18px 16px; }
+}
