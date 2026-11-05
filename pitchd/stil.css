@@ -24,8 +24,8 @@ h1 { font-size: 30px; line-height: 1.15; margin: 0 0 12px; font-weight: 800; }
 h2 { font-size: 20px; line-height: 1.25; margin: 24px 0 6px; }
 h2:first-child { margin-top: 0; }
 h3 { font-size: 17px; margin: 16px 0 4px; }
-p, ul { margin: 0 0 12px; }
-ul { padding-left: 1.2em; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 1.2em; }
 li { margin-bottom: 4px; }
 small, .leise { color: var(--leise); }
 address { font-style: normal; }
