@@ -109,7 +109,7 @@ const SEITEN = {
   'support.html': seite('support.html', `Hilfe & Kontakt – ${M.spiel}`, `Hilfe zu ${M.spiel}: Kontakt und häufige Fragen.`, `
 <div class="karte">
 <h1>Hilfe &amp; Kontakt</h1>
-<p>Fragen, Wünsche oder ein Fehler im Spiel? Schreiben Sie uns: ${mail}</p>
+<p>Fragen, Wünsche oder ein Fehler im Spiel? Schreiben Sie uns: ${mail}${tel}</p>
 <p class="leise">Bitte keine Daten von Kindern schicken. Hilfreich sind: Gerät (zum Beispiel iPad 10. Generation), iOS-Version und was vorher passiert ist.</p>
 </div>
 
