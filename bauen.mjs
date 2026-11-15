@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, cpSync } fr
 import { homedir } from 'node:os';
 import { join, dirname, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 process.chdir(dirname(fileURLToPath(import.meta.url)));
 // --vorschau: Seiten mit sichtbaren Vermerken „noch rechtlich zu prüfen“ (Feld rechtlichZuPruefen in daten/apps.json)
@@ -267,14 +268,20 @@ for (const L of ['de', 'en']) {
 ${PG.analyse.map((d) => `<li><b>${esc(d.name)}</b> (${esc(d.anbieter)}): ${esc(d.zweck[L])}${d.datenschutz ? ` <a href="${esc(d.datenschutz)}">${t(L, 'Datenschutzerklärung', 'Privacy policy')}</a>` : ''}</li>`).join('\n')}
 </ul>`
     : `<p><b>${t(L, 'Analyse:', 'Analytics:')}</b> ${t(L, 'Derzeit setzen wir keine Analyse-Dienste ein.', 'We currently use no analytics services.')}</p>`;
+  // Die App ist nur auf Deutsch: in der englischen Fassung deutsche Bezeichnungen mit Übersetzung in Klammern
+  const loeschen = t(L,
+    'In der App: Zahnrad (Einstellungen) → „Spielstand zurücksetzen“. Alternativ die App löschen, alle Daten liegen nur auf dem Gerät. Käufe bleiben bei Apple und lassen sich über „Käufe wiederherstellen“ zurückholen.',
+    'In the app: gear icon (Settings) → “Spielstand zurücksetzen” (Reset progress). Alternatively delete the app, all data is stored only on the device. Purchases stay with Apple and can be restored via “Käufe wiederherstellen” (Restore purchases).');
 
   neu(L, 'packandgo', 'index.html', (p) => ({ ...basis, kopfzeile: k(p),
     titel: PG.name,
-    beschreibung: t(L, `${PG.name} – eine App von ${A.studio}.`, `${PG.name} – an app by ${A.studio}.`),
+    beschreibung: PG.beschreibung[L],
     inhalt: `
 <div class="karte">
-<h1>${N}</h1>
-<p>${t(L, `Eine App von ${studio}.`, `An app by ${studio}.`)}</p>
+<div class="held"><img src="${rel(p, PG.symbol.gross)}" alt="${t(L, `Das Symbol von ${N}`, `The ${N} icon`)}" width="112" height="112">
+<div><h1>${N}</h1>
+<p>${esc(PG.beschreibung[L])}</p>
+<p class="leise">${t(L, `Eine App von ${studio}.`, `An app by ${studio}.`)}</p></div></div>
 <div class="knoepfe">
 <a class="knopf haupt" href="${rel(p, `${o}support.html`)}">${t(L, 'Hilfe &amp; Kontakt<small>Fragen, Wünsche, Fehler</small>', 'Help &amp; contact<small>Questions, wishes, bugs</small>')}</a>
 <a class="knopf" href="${rel(p, `${o}datenschutz.html`)}">${t(L, 'Datenschutz<small>Was mit Daten passiert</small>', 'Privacy<small>What happens to data</small>')}</a>
@@ -292,12 +299,12 @@ ${PG.analyse.map((d) => `<li><b>${esc(d.name)}</b> (${esc(d.anbieter)}): ${esc(d
 <ul>
 ${t(L, `<li>Kein Benutzerkonto, keine Anmeldung, kein eigener Server.</li>
 <li>Spielstand, Münzen und Einstellungen werden nur auf dem Gerät gespeichert.</li>
-<li>Werbung über Google AdMob. In der EU wird vorher nach Ihrer Einwilligung gefragt.</li>
-<li>Keine Abfrage nach App-Tracking-Transparenz, keine Nutzung der Werbe-ID (IDFA) durch uns.</li>
+<li>Werbung über Google AdMob, nur nicht-personalisiert. In der EU wird vorher nach Ihrer Einwilligung gefragt.</li>
+<li>Keine Abfrage nach App-Tracking-Transparenz, keine Nutzung der Werbe-ID (IDFA).</li>
 <li>Käufe laufen vollständig über Apple. Wir erhalten keine Zahlungsdaten.</li>`, `<li>No user account, no sign-in, no server of our own.</li>
 <li>Game progress, coins and settings are stored only on the device.</li>
-<li>Ads via Google AdMob. In the EU, you are asked for your consent first.</li>
-<li>No App Tracking Transparency prompt, no use of the advertising identifier (IDFA) by us.</li>
+<li>Ads via Google AdMob, non-personalised only. In the EU, you are asked for your consent first.</li>
+<li>No App Tracking Transparency prompt, no use of the advertising identifier (IDFA).</li>
 <li>Purchases are handled entirely by Apple. We receive no payment data.</li>`)}
 </ul>
 ${ALLGEMEIN.verantwortlich(L)}
@@ -306,21 +313,23 @@ ${ALLGEMEIN.verantwortlich(L)}
 <div class="karte">
 <h2>${t(L, 'Die App', 'The app')}</h2>
 ${t(L, `<p><b>Wo Ihre Daten liegen:</b> ${N} hat kein Benutzerkonto, keine Anmeldung und keinen eigenen Server. Spielstand, Münzen und Einstellungen werden nur lokal auf dem Gerät gespeichert.</p>
-<p><b>Werbung:</b> ${N} zeigt Werbung über Google AdMob, einen Dienst der Google Ireland Limited: Belohnungsvideos, die Sie freiwillig ansehen, und Zwischenwerbung. Dabei verarbeitet Google unter anderem Ihre IP-Adresse, Informationen über Gerät und App sowie Ihre Interaktionen mit der Werbung. Mehr dazu bei Google: <a href="https://policies.google.com/technologies/partner-sites?hl=de">Wie Google Daten von Websites und Apps verwendet, die Google-Dienste nutzen</a>.</p>
-<p><b>Ihre Einwilligung:</b> In der EU fragt die App vorher über den Einwilligungsdialog von Google (User Messaging Platform, UMP) nach Ihrer Einwilligung. Ohne Einwilligung gibt es nur nicht-personalisierte beziehungsweise eingeschränkte Werbung. Ihre Einwilligung können Sie jederzeit in der App unter „Einstellungen → Datenschutz-Einstellungen“ ändern.</p>
+<p><b>Werbung:</b> ${N} zeigt Werbung über Google AdMob, einen Dienst der Google Ireland Limited: Belohnungsvideos, die Sie freiwillig ansehen, und Zwischenwerbung. Die App fordert ausschließlich nicht-personalisierte Werbung an. Google erhält dafür Daten, um die Werbung auszuliefern, ihre Reichweite zu messen und vor Betrug zu schützen, unter anderem Ihre IP-Adresse, Informationen über Gerät und App sowie Ihre Interaktionen mit der Werbung. Mehr dazu bei Google: <a href="https://policies.google.com/technologies/partner-sites?hl=de">Wie Google Daten von Websites und Apps verwendet, die Google-Dienste nutzen</a>.</p>
+<p><b>Ihre Einwilligung:</b> Auch für nicht-personalisierte Werbung werden Informationen auf Ihrem Gerät gespeichert oder ausgelesen, zum Beispiel um zu begrenzen, wie oft dieselbe Werbung erscheint, und für zusammengefasste Auswertungen. Dafür fragt die App in der EU vorher über den Einwilligungsdialog von Google (User Messaging Platform, UMP) nach Ihrer Einwilligung. Der Einwilligungsdialog ist Googles Standarddialog (IAB TCF) und nennt allgemeine Zwecke, unter anderem personalisierte Werbung. ${N} fordert unabhängig von Ihrer Auswahl ausschließlich nicht-personalisierte Anzeigen an. Ohne diese Einwilligung liefert Google höchstens eingeschränkte Werbung aus, ohne Funktionen, die eine Kennung auf dem Gerät brauchen. Ihre Einwilligung können Sie jederzeit in der App unter „Einstellungen → Datenschutz-Einstellungen“ ändern.</p>
 <p><b>Rechtsgrundlage:</b>${vermerk} Für Werbung, in die Sie eingewilligt haben, ist Ihre Einwilligung die Rechtsgrundlage (Art. 6 Abs. 1 lit. a DSGVO); soweit dafür Informationen auf Ihrem Gerät gespeichert oder ausgelesen werden, ebenfalls Ihre Einwilligung (§ 25 Abs. 1 TDDDG). Sie können die Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen, wie oben beschrieben.</p>
 <p><b>Übermittlung in die USA:</b>${vermerk} Google kann Daten auch in die USA übermitteln und dort verarbeiten. Einzelheiten nennt Google in seiner <a href="https://policies.google.com/privacy?hl=de">Datenschutzerklärung</a>.</p>
-<p><b>Werbe-ID:</b> Die App fragt nicht nach App-Tracking-Transparenz, und wir nutzen die Werbe-ID Ihres Geräts (IDFA) nicht.</p>
+<p><b>Werbe-ID:</b> Die App fragt nicht nach App-Tracking-Transparenz und nutzt die Werbe-ID Ihres Geräts (IDFA) nicht.</p>
 <p><b>Käufe:</b> Münzpakete und „Werbung entfernen“ laufen vollständig über Apple. Wir erhalten keine Zahlungsdaten.</p>
+<p><b>Spielstand löschen:</b> ${loeschen}</p>
 ${analyse}
 <p><b>Was Apple uns gibt:</b> Wenn auf dem Gerät „Mit App-Entwicklern teilen“ eingeschaltet ist (Einstellungen → Datenschutz &amp; Sicherheit → Analyse &amp; Verbesserungen), stellt Apple uns anonyme Absturz- und Nutzungsdaten bereit. Sie helfen uns, Fehler zu beheben.</p>`,
 `<p><b>Where your data is stored:</b> ${N} has no user account, no sign-in and no server of our own. Game progress, coins and settings are stored only locally on the device.</p>
-<p><b>Ads:</b> ${N} shows ads via Google AdMob, a service of Google Ireland Limited: rewarded videos, which you watch voluntarily, and interstitial ads. In doing so, Google processes, among other things, your IP address, information about the device and the app, and your interactions with the ads. More from Google: <a href="https://policies.google.com/technologies/partner-sites?hl=en">How Google uses information from sites or apps that use its services</a>.</p>
-<p><b>Your consent:</b> In the EU, the app first asks for your consent via Google’s consent dialog (User Messaging Platform, UMP). Without consent, only non-personalised or limited ads are shown. You can change your consent at any time in the app under “Settings → Privacy settings”.</p>
+<p><b>Ads:</b> ${N} shows ads via Google AdMob, a service of Google Ireland Limited: rewarded videos, which you watch voluntarily, and interstitial ads. The app requests non-personalised ads only. For this, Google receives data to deliver the ads, measure their reach and protect against fraud, including your IP address, information about the device and the app, and your interactions with the ads. More from Google: <a href="https://policies.google.com/technologies/partner-sites?hl=en">How Google uses information from sites or apps that use its services</a>.</p>
+<p><b>Your consent:</b> Even non-personalised ads require information to be stored on or read from your device, for example to limit how often the same ad appears and for aggregated reporting. For this, in the EU the app first asks for your consent via Google’s consent dialog (User Messaging Platform, UMP). The consent dialog is Google’s standard dialog (IAB TCF) and lists general purposes, including personalised advertising. Regardless of your choices, ${N} requests non-personalised ads only. Without this consent, Google delivers limited ads at most, without features that need an identifier on the device. You can change your consent at any time in the app under “Einstellungen → Datenschutz-Einstellungen” (Settings → Privacy settings).</p>
 <p><b>Legal basis:</b>${vermerk} For ads you have consented to, the legal basis is your consent (Art. 6(1)(a) GDPR); where information is stored on or read from your device for this purpose, it is also your consent (§ 25(1) TDDDG, German Telecommunications Digital Services Data Protection Act). You can withdraw your consent at any time with effect for the future, as described above.</p>
 <p><b>Transfer to the USA:</b>${vermerk} Google may also transfer data to the USA and process it there. Google gives details in its <a href="https://policies.google.com/privacy?hl=en">Privacy Policy</a>.</p>
-<p><b>Advertising identifier:</b> The app does not show the App Tracking Transparency prompt, and we do not use your device’s advertising identifier (IDFA).</p>
-<p><b>Purchases:</b> Coin packs and “Remove ads” are handled entirely by Apple. We receive no payment data.</p>
+<p><b>Advertising identifier:</b> The app does not show the App Tracking Transparency prompt and does not use your device’s advertising identifier (IDFA).</p>
+<p><b>Purchases:</b> Coin packs and “Werbung entfernen” (Remove ads) are handled entirely by Apple. We receive no payment data.</p>
+<p><b>Deleting your progress:</b> ${loeschen}</p>
 ${analyse}
 <p><b>What Apple shares with us:</b> If “Share With App Developers” is turned on on the device (Settings → Privacy &amp; Security → Analytics &amp; Improvements), Apple provides us with anonymous crash and usage data. It helps us fix bugs.</p>`)}
 </div>
@@ -348,6 +357,11 @@ ${ALLGEMEIN.karte(L, { kinder: false, stand: PG.stand })}` }));
 <h1>${t(L, 'Hilfe &amp; Kontakt', 'Help &amp; contact')}</h1>
 <p>${t(L, 'Fragen, Wünsche oder ein Fehler? Schreiben Sie uns:', 'Questions, wishes or a bug? Write to us:')} ${mail}${tel(L)}</p>
 <p class="leise">${t(L, 'Hilfreich sind: Gerät (zum Beispiel iPhone 15), iOS-Version und was vorher passiert ist.', 'Helpful details: device (for example iPhone 15), iOS version and what happened before.')}</p>
+</div>
+
+<div class="karte">
+<h2>${t(L, 'Häufige Fragen', 'Frequently asked questions')}</h2>
+<p><b>${t(L, 'Wie lösche ich meinen Spielstand?', 'How do I delete my progress?')}</b><br>${loeschen}</p>
 </div>` }));
 }
 
@@ -370,7 +384,11 @@ for (const L of ['de', 'en']) {
 <p>${t(L, `Hinter ${studio} steht ${esc(A.name)} aus ${esc(A.ort)}. Hier finden Sie die Apps und zu jeder App Hilfe, Datenschutz und Impressum.`, `${studio} is ${esc(A.name)} from ${esc(A.ort)}, Germany. Here you will find the apps and, for each app, help, privacy and legal notice.`)}</p>
 <h2>${t(L, 'Die Apps', 'The apps')}</h2>
 <div class="knoepfe">
-${Object.entries(APPS).map(([id, a]) => `<a class="knopf" href="${rel(p, ziel[id])}">${esc(a.name)}${nurDe(id)}${a.unterzeile ? `<small>${esc(a.unterzeile[L])}</small>` : ''}</a>`).join('\n')}
+${Object.entries(APPS).map(([id, a]) => {
+    const unter = a.beschreibung?.[L] ?? a.unterzeile?.[L];
+    const bild = a.symbol?.kopf ? `<img src="${rel(p, a.symbol.kopf)}" alt="" width="56" height="56">` : '';
+    return `<a class="knopf mit-bild" href="${rel(p, ziel[id])}">${bild}<span>${esc(a.name)}${nurDe(id)}${unter ? `<small>${esc(unter)}</small>` : ''}</span></a>`;
+  }).join('\n')}
 </div>
 </div>` }));
 
@@ -419,7 +437,8 @@ for (const [pfad, { app, html }] of Object.entries(SEITEN)) {
     }
     let z = decodeURIComponent(u.pathname.slice(1));
     if (z === '' || z.endsWith('/')) z += 'index.html';
-    if (!SEITEN[z] && !existsSync(z)) fehler.push(`${pfad}: Verweis auf fehlende Datei ${ziel} (${z})`);
+    const erzeugt = Object.values(APPS).some((a) => a.symbol?.quelle && ['klein', 'touch', 'kopf', 'gross'].some((g) => a.symbol[g] === z));
+    if (!SEITEN[z] && !existsSync(z) && !erzeugt) fehler.push(`${pfad}: Verweis auf fehlende Datei ${ziel} (${z})`);
     if (app === 'cookiworld' && !cwDateien(z)) fehler.push(`${pfad}: CookiWorld-Seite verweist auf ${z} – erlaubt sind nur CookiWorld-Seiten`);
   }
   if (app === 'cookiworld') for (const n of andereApps) if (html.includes(n) || html.includes(esc(n))) fehler.push(`${pfad}: CookiWorld-Seite nennt ${n}`);
@@ -441,11 +460,28 @@ for (const [datei, erwartet] of [
 for (const h of hinweise) console.warn(`Hinweis: ${h}`);
 if (fehler.length) { for (const f of fehler) console.error(`✗ ${f}`); process.exit(1); }
 
+// ---------- App-Symbole ----------
+// Aus der Quelle (symbol.quelle, 1024 × 1024) werden die üblichen Größen erzeugt (macOS „sips“). Austausch des Symbols:
+// nur die Quelldatei ersetzen und node bauen.mjs ausführen. --pruefen prüft nur, ob die Größen vorhanden sind und stimmen.
+const GROESSEN = { klein: 96, touch: 180, kopf: 192, gross: 512 };
+const pixel = (f) => execFileSync('sips', ['-g', 'pixelWidth', f], { encoding: 'utf8' }).match(/pixelWidth: (\d+)/)?.[1];
+for (const app of Object.values(APPS)) {
+  const q = app.symbol?.quelle;
+  if (!q) continue;
+  if (!existsSync(q)) { console.error(`✗ Symbol-Quelle ${q} fehlt`); process.exit(1); }
+  for (const [k, px] of Object.entries(GROESSEN)) {
+    const ziel = app.symbol[k];
+    if (process.argv.includes('--pruefen')) {
+      if (!existsSync(ziel) || pixel(ziel) !== String(px)) { console.error(`✗ ${ziel} fehlt oder hat nicht ${px} px – node bauen.mjs ausführen`); process.exit(1); }
+    } else execFileSync('sips', ['-z', String(px), String(px), q, '--out', ziel], { stdio: 'ignore' });
+  }
+}
+
 // ---------- Schreiben bzw. Vergleichen ----------
 if (VORSCHAU) {
   // Lokale Vorschau mit Prüfvermerken in vorschau/ (nicht im Repository), dazu die festen Dateien
   rmSync('vorschau', { recursive: true, force: true });
-  for (const f of ['stil.css', 'apple-touch-icon.png', 'bilder', 'pitchd']) cpSync(f, `vorschau/${f}`, { recursive: true });
+  for (const f of ['stil.css', 'apple-touch-icon.png', 'bilder', 'pitchd', 'packandgo/bilder']) cpSync(f, `vorschau/${f}`, { recursive: true });
   for (const [datei, { html }] of Object.entries(SEITEN)) { mkdirSync(dirname(`vorschau/${datei}`), { recursive: true }); writeFileSync(`vorschau/${datei}`, html); }
   const offen = Object.entries(SEITEN).filter(([, s]) => s.html.includes('class="pruefen"')).map(([p]) => p);
   console.log(`Vorschau in vorschau/ geschrieben (${Object.keys(SEITEN).length} Seiten). Ansehen: python3 -m http.server 8000 --bind 127.0.0.1 -d vorschau`);

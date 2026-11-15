@@ -54,3 +54,5 @@ footer a { margin: 0 8px; }
   .karte { padding: 18px 16px; }
 }
 .pruefen { display: inline-block; font-size: 14px; font-weight: 700; color: var(--tinte); background: var(--sonne); border-radius: 8px; padding: 0 8px; margin: 0 4px; }
+.knopf.mit-bild { display: flex; align-items: center; gap: 14px; }
+.knopf.mit-bild img { width: 56px; height: 56px; border-radius: 13px; flex: none; }

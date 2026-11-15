@@ -1,24 +1,54 @@
 {
   "cookiworld": {
     "name": "CookiWorld",
-    "unterzeile": { "de": "Erschaffe deine eigene Welt", "en": "Create your own world" },
+    "unterzeile": {
+      "de": "Erschaffe deine eigene Welt",
+      "en": "Create your own world"
+    },
     "ordner": "",
-    "symbol": { "klein": "bilder/symbol-96.png", "kopf": "bilder/symbol-192.png", "gross": "bilder/symbol-512.png", "touch": "apple-touch-icon.png" },
-    "stand": { "de": "25. Oktober 2026", "en": "25 October 2026" }
+    "symbol": {
+      "klein": "bilder/symbol-96.png",
+      "kopf": "bilder/symbol-192.png",
+      "gross": "bilder/symbol-512.png",
+      "touch": "apple-touch-icon.png"
+    },
+    "stand": {
+      "de": "25. Oktober 2026",
+      "en": "25 October 2026"
+    }
   },
   "packandgo": {
     "name": "Pack & Go",
     "unterzeile": null,
+    "beschreibung": {
+      "de": "Pack & Go ist ein entspanntes Koffer-Puzzle: Pack Kleidung, Souvenirs und Reiseutensilien geschickt in den Koffer und reise von Hamburg bis ans Mittelmeer und in die Alpen.",
+      "en": "Pack & Go is a relaxing suitcase puzzle: fit clothes, souvenirs and travel gear into your case and travel from Hamburg to the Mediterranean and the Alps."
+    },
     "ordner": "packandgo/",
-    "symbol": null,
-    "stand": { "de": "15. November 2026", "en": "15 November 2026" },
+    "symbol": {
+      "quelle": "packandgo/bilder/symbol-1024.png",
+      "klein": "packandgo/bilder/symbol-96.png",
+      "touch": "packandgo/bilder/symbol-180.png",
+      "kopf": "packandgo/bilder/symbol-192.png",
+      "gross": "packandgo/bilder/symbol-512.png"
+    },
+    "stand": {
+      "de": "15. November 2026",
+      "en": "15 November 2026"
+    },
     "analyse": [],
     "rechtlichZuPruefen": true
   },
   "pitchd": {
     "name": "Pitchd",
-    "unterzeile": { "de": "Camping Check-in", "en": "Camping check-in" },
+    "unterzeile": {
+      "de": "Camping Check-in",
+      "en": "Camping check-in"
+    },
     "ordner": "pitchd/",
-    "handgeschrieben": true
+    "handgeschrieben": true,
+    "symbol": {
+      "kopf": "pitchd/bilder/symbol-192.png"
+    }
   }
 }
