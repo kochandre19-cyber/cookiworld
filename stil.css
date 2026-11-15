@@ -53,3 +53,4 @@ footer a { margin: 0 8px; }
   .kopf b { font-size: 26px; }
   .karte { padding: 18px 16px; }
 }
+.pruefen { display: inline-block; font-size: 14px; font-weight: 700; color: var(--tinte); background: var(--sonne); border-radius: 8px; padding: 0 8px; margin: 0 4px; }
