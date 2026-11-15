@@ -263,9 +263,9 @@ for (const L of ['de', 'en']) {
   // „rechtlichZuPruefen“ auf false setzen.
   const vermerk = VORSCHAU && PG.rechtlichZuPruefen ?` <span class="pruefen">${t(L, 'noch rechtlich zu prüfen', 'legal review pending')}</span>` : '';
   const analyse = PG.analyse?.length
-    ? `<p><b>${t(L, 'Analyse:', 'Analytics:')}</b> ${t(L, 'Wir setzen folgende Analyse-Dienste ein:', 'We use the following analytics services:')}</p>
+    ? `<p><b>${t(L, 'Analyse:', 'Analytics:')}</b>${vermerk} ${t(L, 'Wir setzen folgende Analyse-Dienste ein:', 'We use the following analytics services:')}</p>
 <ul>
-${PG.analyse.map((d) => `<li><b>${esc(d.name)}</b> (${esc(d.anbieter)}): ${esc(d.zweck[L])}${d.datenschutz ? ` <a href="${esc(d.datenschutz)}">${t(L, 'Datenschutzerklärung', 'Privacy policy')}</a>` : ''}</li>`).join('\n')}
+${PG.analyse.map((d) => `<li><b>${esc(d.name)}</b> (${esc(d.anbieter)}): ${esc(d.zweck[L])}${d.datenschutz ? ` <a href="${esc(d.datenschutz[L] ?? d.datenschutz)}">${t(L, `Datenschutzerklärung von ${esc(d.name)}`, `${esc(d.name)} privacy policy`)}</a>` : ''}</li>`).join('\n')}
 </ul>`
     : `<p><b>${t(L, 'Analyse:', 'Analytics:')}</b> ${t(L, 'Derzeit setzen wir keine Analyse-Dienste ein.', 'We currently use no analytics services.')}</p>`;
   // Die App ist nur auf Deutsch: in der englischen Fassung deutsche Bezeichnungen mit Übersetzung in Klammern
@@ -301,11 +301,11 @@ ${t(L, `<li>Kein Benutzerkonto, keine Anmeldung, kein eigener Server.</li>
 <li>Spielstand, Münzen und Einstellungen werden nur auf dem Gerät gespeichert.</li>
 <li>Werbung über Google AdMob, nur nicht-personalisiert. In der EU wird vorher nach Ihrer Einwilligung gefragt.</li>
 <li>Keine Abfrage nach App-Tracking-Transparenz, keine Nutzung der Werbe-ID (IDFA).</li>
-<li>Käufe laufen vollständig über Apple. Wir erhalten keine Zahlungsdaten.</li>`, `<li>No user account, no sign-in, no server of our own.</li>
+<li>Käufe laufen vollständig über Apple. Wir erhalten keine Zahlungsdaten.</li>${PG.analyse?.length ? `\n<li>Nutzungsstatistik über ${esc(PG.analyse.map((d) => d.name).join(', '))}.</li>` : ''}`, `<li>No user account, no sign-in, no server of our own.</li>
 <li>Game progress, coins and settings are stored only on the device.</li>
 <li>Ads via Google AdMob, non-personalised only. In the EU, you are asked for your consent first.</li>
 <li>No App Tracking Transparency prompt, no use of the advertising identifier (IDFA).</li>
-<li>Purchases are handled entirely by Apple. We receive no payment data.</li>`)}
+<li>Purchases are handled entirely by Apple. We receive no payment data.</li>${PG.analyse?.length ? `\n<li>Usage statistics via ${esc(PG.analyse.map((d) => d.name).join(', '))}.</li>` : ''}`)}
 </ul>
 ${ALLGEMEIN.verantwortlich(L)}
 </div>

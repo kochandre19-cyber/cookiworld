@@ -36,7 +36,17 @@
       "de": "15. November 2026",
       "en": "15 November 2026"
     },
-    "analyse": [],
+    "analyse": [
+      {
+        "name": "TelemetryDeck",
+        "anbieter": "TelemetryDeck GmbH, Augsburg",
+        "zweck": {
+          "de": "Nutzungsstatistik, damit wir das Spiel verbessern können. Die App meldet, wenn ein Level gewonnen, verloren, abgebrochen oder neu gestartet wird, wenn ein Booster eingesetzt, ein Werbevideo angesehen oder ein Kauf abgeschlossen wird, jeweils mit Angaben wie der Level-Nummer. Dazu kommen technische Angaben wie App- und iOS-Version und Gerätetyp sowie eine Kennung des Geräts, die nach Angaben von TelemetryDeck vor dem Senden unkenntlich gemacht (gehasht) wird. Die Statistik startet mit der App. Ab Build 28 lässt sie sich in der App unter „Einstellungen → Datenschutz & Hilfe → Nutzungsstatistik“ abschalten; dann werden keine Signale mehr gesendet.",
+          "en": "Usage statistics that help us improve the game. The app reports when a level is won, lost, quit or restarted, when a booster is used, an ad video is watched or a purchase is completed, each with details such as the level number. In addition, technical details such as app and iOS version and device type are sent, together with a device identifier that, according to TelemetryDeck, is made unrecognisable (hashed) before it is sent. The statistics start with the app. From build 28 onwards, you can turn them off in the app under “Einstellungen → Datenschutz & Hilfe → Nutzungsstatistik” (Settings → Privacy & help → Usage statistics); no more signals are sent after that."
+        },
+        "datenschutz": "https://telemetrydeck.com/privacy/"
+      }
+    ],
     "rechtlichZuPruefen": true
   },
   "pitchd": {
