@@ -6,6 +6,7 @@
 //   /cookisoft/       Übersicht aller Apps, Impressum und Datenschutz der Webseite
 //   /packandgo/       Pack & Go (index, datenschutz, impressum, support)
 //   /pitchd/          Pitchd – von Hand geschrieben, wird hier nicht gebaut, nur geprüft
+//   /sheepish/        Sheepish – von Hand geschrieben (nur Deutsch), wird hier nicht gebaut
 //   /en/…             dieselbe Struktur auf Englisch (Pitchd nur auf Deutsch)
 //
 // Der allgemeine Teil (Verantwortlicher, Webseite/Hosting, E-Mail-Kontakt, Rechte) steht einmal in ALLGEMEIN und wird in
@@ -371,8 +372,10 @@ for (const L of ['de', 'en']) {
   const k = (p) => `<a class="kopf" href="${rel(p, `${o}index.html`)}"><span><b>${studio}</b><small>${t(L, `Apps von ${esc(A.name)}`, `Apps by ${esc(A.name)}`)}</small></span></a>`;
   const fuss = [[`${o}datenschutz.html`, t(L, 'Datenschutz', 'Privacy')], [`${o}impressum.html`, t(L, 'Impressum', 'Legal notice')]];
   // Pitchd gibt es nur auf Deutsch
-  const ziel = { cookiworld: sprachPfad(L, 'index.html'), packandgo: sprachPfad(L, `${PG.ordner}index.html`), pitchd: `${PD.ordner}index.html` };
-  const dsZiel = { cookiworld: sprachPfad(L, 'datenschutz.html'), packandgo: sprachPfad(L, `${PG.ordner}datenschutz.html`), pitchd: `${PD.ordner}datenschutz.html` };
+  // Von Hand geschriebene Apps (Pitchd, Sheepish) gibt es nur auf Deutsch, unter ihrem Ordner.
+  const ziel = { cookiworld: sprachPfad(L, 'index.html'), packandgo: sprachPfad(L, `${PG.ordner}index.html`) };
+  const dsZiel = { cookiworld: sprachPfad(L, 'datenschutz.html'), packandgo: sprachPfad(L, `${PG.ordner}datenschutz.html`) };
+  for (const [id, a] of Object.entries(APPS)) if (a.handgeschrieben) { ziel[id] = `${a.ordner}index.html`; dsZiel[id] = `${a.ordner}datenschutz.html`; }
   const nurDe = (id) => (L === 'en' && APPS[id].handgeschrieben ? ' (in German)' : '');
 
   neu(L, null, 'index.html', (p) => ({ symbol: null, kopfzeile: k(p), fuss,

@@ -60,5 +60,18 @@
     "symbol": {
       "kopf": "pitchd/bilder/symbol-192.png"
     }
+  },
+  "sheepish": {
+    "name": "Sheepish",
+    "unterzeile": null,
+    "beschreibung": {
+      "de": "Sheepish ist ein tägliches Logikrätsel: Setze die Hoftiere so auf ihre Weiden, dass jede Zeile, jede Spalte und jedes Gehege genau ein Tier hat – und sich keine Tiere berühren.",
+      "en": "Sheepish is a daily logic puzzle: place the farm animals in their pastures so that every row, every column and every enclosure has exactly one animal – and no two animals touch."
+    },
+    "ordner": "sheepish/",
+    "handgeschrieben": true,
+    "symbol": {
+      "kopf": "sheepish/bilder/symbol-192.png"
+    }
   }
 }
